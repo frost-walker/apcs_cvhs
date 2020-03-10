@@ -6,6 +6,16 @@
 
 public class P13A
 {
+	public static void flip(Object[][] a)
+	{
+		Object[] a1 = new Object[a[0].length];
+		for(int n = 0; n < a.length / 2; n++)
+		{
+			a1 = a[n];
+			a[n] = a[a.length - 1 - n];
+			a[a.length - 1 - n] = a1;
+		}
+	}
 	public static void reverseArray(Object[][] a)
 	{
 		Object[] n = new Object[a[0].length];
@@ -40,7 +50,7 @@ public class P13A
 		Object[][] a = new Object[3][2];
 		array(a);
 		printArray(a);
-		reverseArray(a);
+		flip(a);
 		printArray(a);
 	}
 }

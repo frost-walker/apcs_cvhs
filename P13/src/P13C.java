@@ -8,6 +8,7 @@ public class P13C
 {
 	public static Object[][] Rotate(Object[][] a)
 	{
+		P13A.flip(a);
 		Object[][] n = new Object[a[0].length][a.length];
 		Object[] n1 = new Object[n[0].length];
 		for(int c = 0; c < a[0].length; c++)

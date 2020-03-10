@@ -17,7 +17,7 @@ public class P13D
 			return false;
 		if(search[n] == target[n1])
 			return(searchRow(search, target, n + 1, n1 + 1));
-		return(searchRow(search, target, n, 0));
+		return(searchRow(search, target, n + 1, 0));
 	}
 	public static boolean searchRows(Object[][]search, Object[]target, int row)
 	{
