@@ -23,7 +23,7 @@ public class P13D1
 				n++;
 			n1++;
 		}
-		return n == b.length ? true : false;
+		return (n == b.length);
 	}
 	public static boolean searchRows(Object[][] a, Object[]b)
 	{
