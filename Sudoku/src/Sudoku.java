@@ -25,11 +25,11 @@ public class Sudoku
 	public static boolean checkRows(int[][]a, int row, int column, int checkFor)
 	{
 		int r = 0, c = 0;
-		while(c < column && a[row][c] != checkFor)
+		while(c <= column && a[row][c] != checkFor)
 			c++;
-		while(r < row && a[r][column] != checkFor)
+		while(r <= row && a[r][column] != checkFor)
 			r++;
-		return (r == row && c == column);
+		return (r > row && c > column);
 	}
 	public static boolean checkRow(int []a, int checkFor)
 	{
@@ -47,14 +47,11 @@ public class Sudoku
 		for(int n = 0; n < 81; n++)
 		{
 			int z = (int)(Math.random() * 9) + 1;
-			while(!(checkBox(boxForm[r1], 0, 0, z)))
+			while(!(checkBox(boxForm[r1], 0, 0, z) 
+						&& checkRows(rowForm, r, c, z)));
 			{
 				z = (int)(Math.random() * 9) + 1;
-				System.out.print(r);
-				System.out.print(c);
-				System.out.print(r1);
-				System.out.print(c1);
-				System.out.println(c2);
+				
 				/*System.out.println(z);
 				System.out.println("Row" + checkRows(rowForm, r, c, z));
 				System.out.println(checkBox (boxForm[r1], 0, 0, z));
@@ -62,8 +59,27 @@ public class Sudoku
 			boxForm[r1][c1][c2] = z;
 			rowForm[r][c] = z;
 			 // incrementing section, don't mind here
+			P13A.printArray(rowForm);
 			c2++;
 			c++;
+			if(c % 3 == 0)
+			{
+				r++;
+				if(r == 3)
+				{
+					boxNum++;
+					if(boxNum == 3)
+					{
+						boxNum = 0;
+						r++;
+						c = 0;
+					}
+					else
+						r -=3;
+				}
+				else
+					c -=3;
+			}
 			if(c2 == 3)
 			{
 				c1++;
@@ -72,14 +88,7 @@ public class Sudoku
 				{
 					c1 = 0;
 					r1++;
-					r++;
-					c -= 3 * (r1 + 1);
-					if((r1 + 1) % 3 == 0)
-						c = 0;
-					else
-						r -= 3;
 				}
-
 			}
 		}
 		P13A.printArray(rowForm);
