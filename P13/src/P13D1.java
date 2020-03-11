@@ -10,20 +10,21 @@ public class P13D1
 	{
 		Object[][] a = new Object[4][6];
 		P13A.array(a);
-		Object[] b = {'A', 'B', 'C', 'D'};
+		P13A.printArray(a);
+		Object[] b = {'E','F'};
 		System.out.println(searchRows(a, b));
 	}
 	public static boolean searchRow(Object[] a, Object[]b)
 	{
-		int n = 0, n1 = 0;
-		while(a.length - n1 > b.length - n && n < b.length)
+		int sIndex = 0, tIndex = 0;
+		while(a.length - sIndex >= b.length - tIndex && tIndex < b.length)
 		{
-			n = 0;
-			while(n < b.length && b[n] == a[n1 + n])
-				n++;
-			n1++;
+			tIndex = 0;
+			while(tIndex < b.length && b[tIndex] == a[sIndex + tIndex])
+				tIndex++;
+			sIndex++;
 		}
-		return (n == b.length);
+		return (tIndex == b.length);
 	}
 	public static boolean searchRows(Object[][] a, Object[]b)
 	{
