@@ -6,7 +6,30 @@
 
 public class Sudoku
 {
-	public static boolean checkBox(int[][]box, int r, int c, int checkFor)
+	
+	public static boolean checkBox(int[][]box, 
+			int boxRow, int boxCol, int checkFor)
+	{
+		// boxRow and boxCol say which box it is checking
+		// Loop through the box, look for the number checkFor
+		int row = 0;
+		int col = 0;
+		row = (boxRow + 1) * 3;
+		col = (boxCol + 1) * 3;
+		int r = boxRow * 3;
+		int c = boxCol * 3;// Iteration variables 
+		while(r < row && box[r][c] != checkFor)
+		{
+			c++;
+			if(c == col)
+			{
+				c -= 3;
+				r++;
+			}
+		}
+		return (r == row);
+	}
+	/*public static boolean checkBox(int[][]box, int r, int c, int checkFor)
 	{
 		if(box[r][c] == checkFor)
 			return false;	
@@ -20,16 +43,16 @@ public class Sudoku
 			return true;	
 		return(checkBox(box, r, c, checkFor));
 		
-	}
+	}*/
 	
 	public static boolean checkRows(int[][]a, int row, int column, int checkFor)
 	{
 		int r = 0, c = 0;
-		while(c <= column && a[row][c] != checkFor)
+		while(c < column && a[row][c] != checkFor)
 			c++;
-		while(r <= row && a[r][column] != checkFor)
+		while(r < row && a[r][column] != checkFor)
 			r++;
-		return (r > row && c > column);
+		return (r == row && c == column);
 	}
 	public static boolean checkRow(int []a, int checkFor)
 	{
@@ -38,74 +61,57 @@ public class Sudoku
 			n++;
 		return (n == a.length);
 	}
-	public static int[][][] generate()
+	public static int[][] generate()
 	{
-		int[][][] boxForm = new int[9][3][3]; // Need these two of these 
-		int[][] rowForm = new int[9][9];
-		int boxNum = 0; // I'm a noob So I gotta do this
-		int r = 0, c = 0, r1 = 0, c1 = 0, c2 = 0; // Two row column lists
-		for(int n = 0; n < 81; n++)
-		{
-			int z = (int)(Math.random() * 9) + 1;
-			while(!(checkBox(boxForm[r1], 0, 0, z) 
-						&& checkRows(rowForm, r, c, z)));
+		int[][] puzzle = new int[9][9];
+		int col = 0; // Row, column, boxCol ( 0 to 3), boxRow( zero to three)
+		int row = 0;
+		int boxCol = 0;
+		int boxRow = 0;
+		long z = 0;
+		int insert = (int)(Math.random() * 9) + 1; // number to insert
+		while(boxRow < 3)
+		{	
+			while(!((checkBox(puzzle, boxRow, boxCol, insert))))
 			{
-				z = (int)(Math.random() * 9) + 1;
-				
-				/*System.out.println(z);
-				System.out.println("Row" + checkRows(rowForm, r, c, z));
-				System.out.println(checkBox (boxForm[r1], 0, 0, z));
-			*/}
-			boxForm[r1][c1][c2] = z;
-			rowForm[r][c] = z;
-			 // incrementing section, don't mind here
-			P13A.printArray(rowForm);
-			c2++;
-			c++;
-			if(c % 3 == 0)
-			{
-				r++;
-				if(r == 3)
-				{
-					boxNum++;
-					if(boxNum == 3)
-					{
-						boxNum = 0;
-						r++;
-						c = 0;
-					}
-					else
-						r -=3;
-				}
-				else
-					c -=3;
+				System.out.println(checkBox(puzzle, boxRow, boxCol, insert));
+				insert = (int)(Math.random() * 9) + 1;
 			}
-			if(c2 == 3)
+			if(z > 100000)
 			{
-				c1++;
-				c2 = 0;
-				if(c1 == 3)
+				System.out.print(row);
+				System.out.print(col);
+				System.out.print(boxRow);
+				System.out.println(boxCol);
+				return puzzle;
+			}
+			puzzle[row][col] = insert;
+			// chunk of clunky movement code that ensures box by box editing
+			col++;
+			if(col % 3 == 0)
+			{
+				row++;
+				if(row % 3 == 0)
 				{
-					c1 = 0;
-					r1++;
+					boxCol++;
+					if(boxCol == 3)
+					{
+						boxCol = 0;
+						col = 0;
+						boxRow++;
+					}
+					else row -= 3;
 				}
+				else col -= 3; // Goes down three rows by three rows every time
+						   // From right to left by each box
 			}
 		}
-		P13A.printArray(rowForm);
-		return boxForm;
+		return puzzle;
 	}
 	public static void main(String[] args)
 	{
-		int[][][] a = generate();
-		for(int n = 0; n < a.length; n++)
-		{
-			for(int n1 = 0; n1 < a[0].length; n1++)
-			{
-				for(int n2 = 0; n2 < a[0][0].length; n2++)
-					System.out.print(a[n][n1][n2]);
-			}
-			System.out.println();
-		}
+		int[][] a = generate();	
+		P13A.printArray(a);
 	}
 }
 
