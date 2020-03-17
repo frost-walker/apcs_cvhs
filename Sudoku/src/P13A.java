@@ -45,14 +45,7 @@ public class P13A
 				a[r][c] = n++;
 		}
 	}
-	public static void main(String[] args)
-	{
-		Object[][] a = new Object[3][2];
-		array(a);
-		printArray(a);
-		flip(a);
-		printArray(a);
-	}
+
 }
 
 
