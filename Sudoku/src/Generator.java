@@ -39,7 +39,7 @@ public class Generator
 				boxRow++;
 			}
 		}
-		return (boxRow == row / 3 + 3 );
+		return (boxRow == row / 3 * 3 + 3 );
 	}
 	public static int[][] createPuzzle()
 	{
@@ -52,8 +52,9 @@ public class Generator
 	}
 	public static void generate(int[][] puzzle, int row, int col)
 	{
-		System.out.print(row);
-		System.out.println(col);
+		P13A.printArray(puzzle);
+		if(row == 9)
+			return;
 		boolean foundNum = false;
 		Random gen = new Random();
 		ArrayList<Integer> selection = new ArrayList<Integer>();
@@ -62,18 +63,18 @@ public class Generator
 			selection.add(i);
 		while(!selection.isEmpty() || !foundNum)
 		{
-			int addTo = selection.get(gen.nextInt(selection.size()));
-			if(checkRow(puzzle, row, addTo) && checkCol(puzzle, col, addTo) 
-					&& checkBox(puzzle, row, col, addTo))
+			int addTo = gen.nextInt(selection.size());
+			if(checkBox(puzzle, row, col, selection.get(addTo))
+					&& checkRow(puzzle, row, selection.get(addTo))
+					&& checkCol(puzzle, col, selection.get(addTo)))
 			{
-				puzzle[row][col] = addTo;
+				puzzle[row][col] = selection.get(addTo);
 				foundNum = true;
-				P13A.printArray(puzzle);
 				break;
 			}
 			else
 			{
-				selection.remove(Integer.valueOf(addTo));
+				selection.remove(addTo);
 				if(selection.isEmpty())
 					break;
 			}
@@ -96,9 +97,13 @@ public class Generator
 	public static void prevSquare(int[][] puzzle, int row, int col)
 	{
 		if(col == 0)
-			generate(puzzle, row - 1, 8);
+		{
+			row--;
+			col = 8;
+		}
 		else
-			generate(puzzle, row, col - 1);
+			col--;
+		generate(puzzle, row, col);
 	}
 	public static void main(String[] args)
 	{
