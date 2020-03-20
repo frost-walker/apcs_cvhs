@@ -47,55 +47,68 @@ public class Generator
 		for(int[] n : puzzle)
 			for(int n1 : n)
 				n1 = 0;
-		generate(puzzle, 0, 0);
+		ArrayList<Integer> avail = new ArrayList<Integer>();
+		int penis = 0;
+		generate(puzzle, 0, 0, avail, penis);
 		return puzzle;
 	}
-	public static void generate(int[][] puzzle, int row, int col)
+	public static ArrayList<Integer> generateSelect(ArrayList<Integer> avail,
+			int row, int col, int[][] puzzle)
 	{
+		ArrayList<Integer> select = new ArrayList<Integer>();
+		int n1 = 0;
+		for(int n = 0; n < 10; n++)
+		{
+			if(checkBox(puzzle, row, col, n)
+					&& checkRow(puzzle, row, n)
+					&& checkCol(puzzle, col, n))
+			{
+				while(n1 < avail.size() && n != avail.get(n1))
+					n1++;
+				if(n1 == avail.size())
+					select.add(n);
+				n1 = 0;
+			}
+		}
+		return select;
+	}
+	public static void generate(int[][] puzzle, int row, int col,
+			ArrayList<Integer> avail, int penis)
+	{
+		System.out.println(penis++);
 		P13A.printArray(puzzle);
 		if(row == 9)
 			return;
-		boolean foundNum = false;
 		Random gen = new Random();
-		ArrayList<Integer> selection = new ArrayList<Integer>();
-		// I at least came up with this, the process was terrible
-		for(int i = 1; i < 10; i++)
-			selection.add(i);
-		while(!selection.isEmpty() || !foundNum)
+		if(col == 0 && avail.size() >= 9)
+			avail = new ArrayList<Integer>();
+		ArrayList<Integer> select = generateSelect(avail, row, col, puzzle);
+		if(select.size() == 0)
+			prevSquare(puzzle, row, col, avail, penis);
+		else
 		{
-			int addTo = gen.nextInt(selection.size());
-			if(checkBox(puzzle, row, col, selection.get(addTo))
-					&& checkRow(puzzle, row, selection.get(addTo))
-					&& checkCol(puzzle, col, selection.get(addTo)))
-			{
-				puzzle[row][col] = selection.get(addTo);
-				foundNum = true;
-				break;
-			}
-			else
-			{
-				selection.remove(addTo);
-				if(selection.isEmpty())
-					break;
-			}
+			int n = gen.nextInt(select.size());
+			puzzle[row][col] = select.get(n);
+			avail.add(select.get(n));
+			nextSquare(puzzle, row, col, avail, penis);
+	
 		}
-		if(selection.isEmpty())
-			prevSquare(puzzle, row, col);
-		else if(foundNum && emptyCheck(puzzle))
-			nextSquare(puzzle, row, col);
-
 	}
 	// helper function that moves to the next square
-	public static void nextSquare(int[][] puzzle, int row, int col)
+	public static void nextSquare(int[][] puzzle, int row, int col,
+			ArrayList<Integer> avail, int penis)
 	{
 		if(col == 8)
-			generate(puzzle, row + 1, 0);
+			generate(puzzle, row + 1, 0, avail, penis);
 		else
-			generate(puzzle, row, col + 1);
+			generate(puzzle, row, col + 1, avail, penis);
 	}
 	// helper function that goes back a square
-	public static void prevSquare(int[][] puzzle, int row, int col)
+	public static void prevSquare(int[][] puzzle, int row, int col,
+			ArrayList<Integer> avail, int penis)
 	{
+		if(avail.size() > 0)
+			avail.remove(avail.size() - 1);
 		if(col == 0)
 		{
 			row--;
@@ -103,20 +116,16 @@ public class Generator
 		}
 		else
 			col--;
-		generate(puzzle, row, col);
+		avail.add(puzzle[row][col]);
+		puzzle[row][col] = 0;
+		generate(puzzle, row, col, avail, penis);
 	}
 	public static void main(String[] args)
 	{
 		int[][]puzzle = createPuzzle();
+		P13A.printArray(puzzle);
 	}
-	public static boolean emptyCheck(int[][]puzzle)
-	{
-		for(int[]n : puzzle)
-			for(int n1 : n)
-				if(n1 == 0)
-					return true;
-		return false;
-	}
+
 
 }
 
