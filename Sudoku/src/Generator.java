@@ -25,6 +25,35 @@ public class Generator
 		return(r == puzzle.length);
 	}
 
+	public static int[][] completePuzzle(int[][] puzzle)
+	{
+		int r = 0;
+		int[][] cPuzzle = new int[9][9]; //completed puzzle
+		int c = 0;
+		while(r < puzzle.length)
+		{
+			Random gen = new Random();
+			ArrayList<Integer> gDifficulty = new ArrayList<Integer>();
+			// this ArrayList Guarantees difficulty
+			for(int n = 0; n < 4; n++)
+			{
+				int n1 = 0;
+				c = gen.nextInt(puzzle[0].length);
+				while(n1 < gDifficulty.size() && c != gDifficulty.get(n1))
+					n1++;
+				if(n1 == gDifficulty.size())
+				{
+					gDifficulty.add(c);
+					cPuzzle[r][c] = puzzle[r][c];
+				}
+				else
+					n--;
+			}
+			r++;
+		}
+		return cPuzzle;
+	}
+	
 	public static boolean checkBox(int[][] puzzle, int row, 
 			int col, int checkFor)
 	{
@@ -48,8 +77,8 @@ public class Generator
 			for(int n1 : n)
 				n1 = 0;
 		ArrayList<Integer> avail = new ArrayList<Integer>();
-		int penis = 0;
-		generate(puzzle, 0, 0, avail, penis);
+		int calls = 0;
+		generate(puzzle, 0, 0, avail, calls);
 		return puzzle;
 	}
 	public static ArrayList<Integer> generateSelect(ArrayList<Integer> avail,
@@ -73,10 +102,9 @@ public class Generator
 		return select;
 	}
 	public static void generate(int[][] puzzle, int row, int col,
-			ArrayList<Integer> avail, int penis)
+			ArrayList<Integer> avail, int calls)
 	{
-		System.out.println(penis++);
-		P13A.printArray(puzzle);
+		System.out.println(calls++);
 		if(row == 9)
 			return;
 		Random gen = new Random();
@@ -84,28 +112,28 @@ public class Generator
 			avail = new ArrayList<Integer>();
 		ArrayList<Integer> select = generateSelect(avail, row, col, puzzle);
 		if(select.size() == 0)
-			prevSquare(puzzle, row, col, avail, penis);
+			prevSquare(puzzle, row, col, avail, calls);
 		else
 		{
 			int n = gen.nextInt(select.size());
 			puzzle[row][col] = select.get(n);
 			avail.add(select.get(n));
-			nextSquare(puzzle, row, col, avail, penis);
+			nextSquare(puzzle, row, col, avail, calls);
 	
 		}
 	}
 	// helper function that moves to the next square
 	public static void nextSquare(int[][] puzzle, int row, int col,
-			ArrayList<Integer> avail, int penis)
+			ArrayList<Integer> avail, int calls)
 	{
 		if(col == 8)
-			generate(puzzle, row + 1, 0, avail, penis);
+			generate(puzzle, row + 1, 0, avail, calls);
 		else
-			generate(puzzle, row, col + 1, avail, penis);
+			generate(puzzle, row, col + 1, avail, calls);
 	}
 	// helper function that goes back a square
 	public static void prevSquare(int[][] puzzle, int row, int col,
-			ArrayList<Integer> avail, int penis)
+			ArrayList<Integer> avail, int calls)
 	{
 		if(avail.size() > 0)
 			avail.remove(avail.size() - 1);
@@ -118,15 +146,14 @@ public class Generator
 			col--;
 		avail.add(puzzle[row][col]);
 		puzzle[row][col] = 0;
-		generate(puzzle, row, col, avail, penis);
+		generate(puzzle, row, col, avail, calls);
 	}
 	public static void main(String[] args)
 	{
 		int[][]puzzle = createPuzzle();
 		P13A.printArray(puzzle);
+		puzzle = completePuzzle(puzzle);
+		System.out.println();
+		P13A.printArray(puzzle);
 	}
-
-
 }
-
-
