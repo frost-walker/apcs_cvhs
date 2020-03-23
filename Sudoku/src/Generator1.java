@@ -6,8 +6,6 @@
 import java.util.*;
 public class Generator1
 {
-	// a generator that is pseudo-recursive, using backtracking
-	// could not comprehend this so the solution is unoriginal
 	
 	public static boolean checkRow(int[][] puzzle, int row, int checkFor)
 	{
@@ -76,32 +74,9 @@ public class Generator1
 		for(int[] n : puzzle)
 			for(int n1 : n)
 				n1 = 0;
-		ArrayList<Integer> avail = new ArrayList<Integer>();
-		int calls = 0;
-		generate(puzzle, 0, 0, avail, calls);
+		generate(puzzle, 0, 0);
 		return puzzle;
 	}
-	/*public static ArrayList<Integer> generateSelect(ArrayList<Integer> avail,
-			int row, int col, int[][] puzzle)
-	{
-		ArrayList<Integer> select = new ArrayList<Integer>();
-		int n1 = 0;
-		for(int n = 0; n < 10; n++)
-		{
-			if(checkBox(puzzle, row, col, n)
-					&& checkRow(puzzle, row, n)
-					&& checkCol(puzzle, col, n))
-			{
-				while(n1 < avail.size() && n != avail.get(n1))
-					n1++;
-				if(n1 == avail.size())
-					select.add(n);
-				n1 = 0;
-			} // this makes a list with legal values to return from
-		}
-		return select;
-	} */
-	
 	public static ArrayList<Integer> generateSelect(int row, int col, int[][] puzzle)
 	{
 		ArrayList<Integer> select = new ArrayList<Integer>();
@@ -112,68 +87,31 @@ public class Generator1
 				select.add(n);
 		return select;
 	}
-	public static boolean generate(int[][] puzzle, int row, int col,
-			ArrayList<Integer> avail, int calls)
+	public static boolean generate(int[][] puzzle, int row, int col)
 	{
 		boolean finished = false;
-		System.out.println(calls++);
 		if(row == 9)
 			return true;
 		Random gen = new Random();
-		if(col == 0)
-			avail = new ArrayList<Integer>();
 		ArrayList<Integer> select = generateSelect(row, col, puzzle);
-		/*if(select.size() == 0)
-			prevSquare(puzzle, row, col, avail, calls);
-		else
-		{
-			int n = gen.nextInt(select.size());
-			puzzle[row][col] = select.get(n);
-			avail.add(select.get(n));
-			nextSquare(puzzle, row, col, avail, calls);
-	
-		}*/
 		if(select.size() > 0)
 		{	
 			do
 			{
 				int n = gen.nextInt(select.size());
 				puzzle[row][col] = select.get(n);
-				avail.add(select.get(n));
 				select.remove(n);
-				finished = nextSquare(puzzle, row, col, avail, calls);
+				finished = (col == 8) ? 
+					generate(puzzle, row + 1, 0) : 
+					generate(puzzle, row, col + 1); // this is where the 
+													// recursion happens
 			}while(select.size() != 0 && !finished);
 			if(!finished)
 				puzzle[row][col] = 0;
 		}
 		return finished;
 	}
-	// helper function that moves to the next square
-	public static boolean nextSquare(int[][] puzzle, int row, int col,
-			ArrayList<Integer> avail, int calls)
-	{
-		if(col == 8)
-			return generate(puzzle, row + 1, 0, avail, calls);
-		else
-			return generate(puzzle, row, col + 1, avail, calls);
-	}
-	// helper function that goes back a square
-	public static void prevSquare(int[][] puzzle, int row, int col,
-			ArrayList<Integer> avail, int calls)
-	{
-		if(avail.size() > 0)
-			avail.remove(avail.size() - 1);
-		if(col == 0)
-		{
-			row--;
-			col = 8;
-		}
-		else
-			col--;
-		avail.add(puzzle[row][col]);
-		puzzle[row][col] = 0;
-		generate(puzzle, row, col, avail, calls);
-	}
+	
 	public static void main(String[] args)
 	{
 		int[][]puzzle = createPuzzle();
