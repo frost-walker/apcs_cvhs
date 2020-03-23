@@ -4,7 +4,7 @@
  * @created     : Sunday Mar 15, 2020 21:39:37 PDT
  */
 import java.util.*;
-public class Generator
+public class Generator1
 {
 	// a generator that is pseudo-recursive, using backtracking
 	// could not comprehend this so the solution is unoriginal
@@ -81,7 +81,7 @@ public class Generator
 		generate(puzzle, 0, 0, avail, calls);
 		return puzzle;
 	}
-	public static ArrayList<Integer> generateSelect(ArrayList<Integer> avail,
+	/*public static ArrayList<Integer> generateSelect(ArrayList<Integer> avail,
 			int row, int col, int[][] puzzle)
 	{
 		ArrayList<Integer> select = new ArrayList<Integer>();
@@ -100,18 +100,30 @@ public class Generator
 			} // this makes a list with legal values to return from
 		}
 		return select;
+	} */
+	
+	public static ArrayList<Integer> generateSelect(int row, int col, int[][] puzzle)
+	{
+		ArrayList<Integer> select = new ArrayList<Integer>();
+		for(int n = 0; n < 10; n++)
+			if(checkBox(puzzle, row, col, n)
+			   && checkRow(puzzle, row, n)
+			   && checkCol(puzzle, col, n))
+				select.add(n);
+		return select;
 	}
-	public static void generate(int[][] puzzle, int row, int col,
+	public static boolean generate(int[][] puzzle, int row, int col,
 			ArrayList<Integer> avail, int calls)
 	{
+		boolean finished = false;
 		System.out.println(calls++);
 		if(row == 9)
-			return;
+			return true;
 		Random gen = new Random();
-		if(col == 0 && avail.size() >= 9)
+		if(col == 0)
 			avail = new ArrayList<Integer>();
-		ArrayList<Integer> select = generateSelect(avail, row, col, puzzle);
-		if(select.size() == 0)
+		ArrayList<Integer> select = generateSelect(row, col, puzzle);
+		/*if(select.size() == 0)
 			prevSquare(puzzle, row, col, avail, calls);
 		else
 		{
@@ -120,16 +132,30 @@ public class Generator
 			avail.add(select.get(n));
 			nextSquare(puzzle, row, col, avail, calls);
 	
+		}*/
+		if(select.size() > 0)
+		{	
+			do
+			{
+				int n = gen.nextInt(select.size());
+				puzzle[row][col] = select.get(n);
+				avail.add(select.get(n));
+				select.remove(n);
+				finished = nextSquare(puzzle, row, col, avail, calls);
+			}while(select.size() != 0 && !finished);
+			if(!finished)
+				puzzle[row][col] = 0;
 		}
+		return finished;
 	}
 	// helper function that moves to the next square
-	public static void nextSquare(int[][] puzzle, int row, int col,
+	public static boolean nextSquare(int[][] puzzle, int row, int col,
 			ArrayList<Integer> avail, int calls)
 	{
 		if(col == 8)
-			generate(puzzle, row + 1, 0, avail, calls);
+			return generate(puzzle, row + 1, 0, avail, calls);
 		else
-			generate(puzzle, row, col + 1, avail, calls);
+			return generate(puzzle, row, col + 1, avail, calls);
 	}
 	// helper function that goes back a square
 	public static void prevSquare(int[][] puzzle, int row, int col,
