@@ -6,52 +6,38 @@
 import java.util.*;
 public class Generator1
 {
-	
-	public static boolean checkRow(int[][] puzzle, int row, int checkFor)
+	public static boolean checkAcross(int[][] puzzle, int row, int col,
+			int checkFor)
 	{
-		int c = 0;
-		while(c < puzzle[0].length && puzzle[row][c] != checkFor)
+		int c = 0, r = 0;
+		while(c < col && puzzle[row][c] != checkFor)
 			c++;
-		return(c == puzzle[0].length);
-	}
-
-	public static boolean checkCol(int[][] puzzle, int col, int checkFor)
-	{
-		int r = 0;
-		while(r < puzzle.length && puzzle[r][col] != checkFor)
+		while(r < row && puzzle[r][col] != checkFor)
 			r++;
-		return(r == puzzle.length);
+		return(c == col && r == row);
 	}
-
 	public static int[][] completePuzzle(int[][] puzzle)
 	{
-		int r = 0;
 		int[][] cPuzzle = new int[9][9]; //completed puzzle
-		int c = 0;
-		while(r < puzzle.length)
+		ArrayList<Integer[]> gDifficulty = new ArrayList<Integer[]>();
+		while(gDifficulty.size() != 17)
 		{
 			Random gen = new Random();
-			ArrayList<Integer> gDifficulty = new ArrayList<Integer>();
-			// this ArrayList Guarantees difficulty
-			for(int n = 0; n < 4; n++)
+			int row = gen.nextInt(puzzle.length);
+			int col = gen.nextInt(puzzle[0].length);
+			int n = 0;
+			while(n < gDifficulty.size() 
+					&& !(gDifficulty.get(n)[0] == row
+					&& gDifficulty.get(n)[1] == col))
+			n++;
+			if(n == gDifficulty.size())
 			{
-				int n1 = 0;
-				c = gen.nextInt(puzzle[0].length);
-				while(n1 < gDifficulty.size() && c != gDifficulty.get(n1))
-					n1++;
-				if(n1 == gDifficulty.size())
-				{
-					gDifficulty.add(c);
-					cPuzzle[r][c] = puzzle[r][c];
-				}
-				else
-					n--;
+					gDifficulty.add(new Integer[]{row, col});
+					cPuzzle[row][col] = puzzle[row][col];
 			}
-			r++;
 		}
 		return cPuzzle;
 	}
-	
 	public static boolean checkBox(int[][] puzzle, int row, 
 			int col, int checkFor)
 	{
@@ -68,22 +54,14 @@ public class Generator1
 		}
 		return (boxRow == row / 3 * 3 + 3 );
 	}
-	public static int[][] createPuzzle()
-	{
-		int[][] puzzle = new int[9][9];
-		for(int[] n : puzzle)
-			for(int n1 : n)
-				n1 = 0;
-		generate(puzzle, 0, 0);
-		return puzzle;
-	}
-	public static ArrayList<Integer> generateSelect(int row, int col, int[][] puzzle)
+
+	public static ArrayList<Integer> generateSelect(int row, int col, 
+			int[][] puzzle)
 	{
 		ArrayList<Integer> select = new ArrayList<Integer>();
 		for(int n = 0; n < 10; n++)
 			if(checkBox(puzzle, row, col, n)
-			   && checkRow(puzzle, row, n)
-			   && checkCol(puzzle, col, n))
+			   && checkAcross(puzzle, row, col, n))
 				select.add(n);
 		return select;
 	}
@@ -96,7 +74,7 @@ public class Generator1
 		ArrayList<Integer> select = generateSelect(row, col, puzzle);
 		if(select.size() > 0)
 		{	
-			do
+			while(select.size() > 0 && !finished)
 			{
 				int n = gen.nextInt(select.size());
 				puzzle[row][col] = select.get(n);
@@ -105,16 +83,16 @@ public class Generator1
 					generate(puzzle, row + 1, 0) : 
 					generate(puzzle, row, col + 1); // this is where the 
 													// recursion happens
-			}while(select.size() != 0 && !finished);
-			if(!finished)
-				puzzle[row][col] = 0;
+			}
+			puzzle[row][col] = finished ? puzzle[row][col] : 0;	
 		}
 		return finished;
 	}
 	
 	public static void main(String[] args)
 	{
-		int[][]puzzle = createPuzzle();
+		int[][]puzzle = new int[9][9];
+		generate(puzzle, 0, 0);
 		P13A.printArray(puzzle);
 		puzzle = completePuzzle(puzzle);
 		System.out.println();
