@@ -33,3 +33,9 @@ It randomly selects the options from the list of options, and keeps going down
 the path until it whittles down the list and there are no more options. 
 TRUST THE RECURSION...
 hopefully I now understand recursion after this.
+
+Journal Entry 3/24
+I used VSCode for the first time, not sure how I like it
+Discovered I am a boomer, I cannot use anything but vim and bash
+Will attempt to learn VSCode, seems kinda fast and cool with GitHub built in. 
+How bad could it be?
