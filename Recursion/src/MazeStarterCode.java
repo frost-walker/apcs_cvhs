@@ -22,7 +22,7 @@ public class MazeStarterCode
         }
 
         // Convert array of Strings into 2D array of char
-        int numRows = lines.size();
+        int numRows = lines.sizbe();
         int numCols = lines.get(0).length();
         char[][] maze = new char[numRows][numCols];
         for (int row = 0; row < numRows; row++)

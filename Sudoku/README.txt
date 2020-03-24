@@ -8,5 +8,12 @@ maxes out at around 2000 calls. The average call is between 1000 and 200 though.
 Every 50 or so tests it fails, and I see that as an absolute win. 
 Started like around March 1, Finished the generator three weeks later 3/20
 
+3/22
+The above is false.
+What I did was not recursive backtracking. It now has a finite stack.
+It was not backtracking because although it was recursive, it never backtracked.
+This new process contains a loop that loops through and does stuff until it returns true.
+The other process was needlessly complicated.
+
 
 Next Steps: I guess do the shitty Leetcode solver thing. How hard could it be
