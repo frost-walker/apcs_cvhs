@@ -18,6 +18,18 @@ The other process was needlessly complicated.
 
 
 Next Steps: I guess do the shitty Leetcode solver thing. How hard could it be
+3/24 Starting the Solver, after a few days of relative inactivity
+It should be pretty easy, not aiming for huristics this time and just doing
+regular recursive backtracking
+It should relatively go on the same process as the Generator class
+The key difference is that there will already be numbers in set positions
+
+Main thing being attempted in the solver:
+Try to solve a puzzle that has been generated.
+It is no use generating a puzzle and randomly removing values when the puzzle
+itself turns out to be useless.
+Why am I typing in this thing more than actually programming
+GOTTA WATCH SOME GEOHOT
 
 3/23 
 This is not even a README anymore, don't even know what a readme is
