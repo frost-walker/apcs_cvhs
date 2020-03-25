@@ -3,7 +3,8 @@
  * @file        : Generator
  * @created     : Sunday Mar 15, 2020 21:39:37 PDT
  */
-import java.util.*;
+// the second of two: this time it's truly backtracking
+ import java.util.*;
 public class Generator1
 {
 	public static boolean checkAcross(int[][] puzzle, int row, int col,
