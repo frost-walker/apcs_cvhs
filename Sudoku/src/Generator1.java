@@ -10,17 +10,17 @@ public class Generator1
 			int checkFor)
 	{
 		int c = 0, r = 0;
-		while(c < col && puzzle[row][c] != checkFor)
+		while(c < puzzle[0].length && puzzle[row][c] != checkFor)
 			c++;
-		while(r < row && puzzle[r][col] != checkFor)
+		while(r < puzzle.length && puzzle[r][col] != checkFor)
 			r++;
-		return(c == col && r == row);
+		return(c == puzzle[0].length && r == puzzle.length);
 	}
 	public static int[][] completePuzzle(int[][] puzzle)
 	{
 		int[][] cPuzzle = new int[9][9]; //completed puzzle
 		ArrayList<Integer[]> gDifficulty = new ArrayList<Integer[]>();
-		while(gDifficulty.size() != 17)
+		while(gDifficulty.size() != 36)
 		{
 			Random gen = new Random();
 			int row = gen.nextInt(puzzle.length);
