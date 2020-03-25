@@ -12,31 +12,7 @@ public class Solver
         return cPuzzle;
     }
     
-    public static ArrayList<Integer[]> genPositions(int[][] puzzle, int n)
-    {
-        ArrayList<Integer[]> positions = new ArrayList<Integer[]>();
-        for(int r = 0; r < puzzle.length; r++)
-            for(int c = 0; c < puzzle[0].length; c++)
-                if(Generator1.checkAcross(puzzle, r, c, n) &&
-                    Generator1.checkBox(puzzle, r, c, n))
-                    positions.add(new Integer[]{r, c});
-        return positions;
-    }
-    public static boolean canInsert(ArrayList<ArrayList<Integer[]>> posits,
-    int[][] puzzle) // the variable name is kinda gay but idk I guess
-    {
-        for(int r = 0; r < posits.size(); r++)
-        {
-
-        }
-    }
-    public static void logicalSolve(int[][] puzzle)
-    {
-        ArrayList<ArrayList<Integer[]>> positionsArray = 
-        new ArrayList<ArrayList<Integer[]>>();
-        for(int n = 1; n < 10; n++)
-            positionsArray.add(genPositions(puzzle, n));
-    }   
+      
     public static boolean solve(int[][] cPuzzle, int row, int col)
     {
         if(row == 9)
